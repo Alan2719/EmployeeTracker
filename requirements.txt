@@ -1,0 +1,19 @@
+1. - Node, inquirer and MySQL.
+2. - Three tables.
+3. - Table 1 --> department (id, name)
+4. - Table 2 --> role(id, title, salary department_id).
+5. - Table 3 --> employee(id, first_name, last_name, role_id, manager_id).
+6. - Add departments, roles, and employees; view departments, roles, and employees;
+update employee roles.
+
+Bonus-----------------------------------------------------------------------------
+1. - Update Employee managers.
+2. - View employees by manager.
+3. - Delete departments, roles and employees.
+4. - View the total utilized budget of a department.
+
+Pseudocode
+1. - What does the user want to do? (add, view or update).
+2. - Add --> Ask for first name, last name, role and manager.
+3. - Update --> manager and roles. 
+4. - View --> departments, roles and employees. 
