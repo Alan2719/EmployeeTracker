@@ -31,13 +31,21 @@ CREATE TABLE employee(
 );
 
 INSERT INTO departments (department)
-VALUES ("Design");
+VALUES ("Enginnering"),("Sales"),("Legal"),("Marketing");
 
-INSERT INTO roles (title, salary)
-VALUES ("Design Enginner", 30000);
+INSERT INTO roles (department_id, title, salary)
+VALUES (1,"Design Enginner", 30000), (1,"Software Enginner",30000), (2, "Purchase Lead", 25000),
+(2,"Purchase Person",22000), (3,"Sales Lead",25000), (3,"Sales Person", 25000) ,(4,"Marketing Lead",22000), (4,"Marketing Person","20000");
+	
+/*INSERT INTO employee (first_name, last_name)
+VALUES ("Alan","Velazquez"), ("Diego","Acosta"), ("Víctor","Salgado"),
+("David","Morales"), ("Diana", "España"), ("Francisco","Sanchez"),
+("Eréndira","Acuña"), ("Axel","Tovar"); */
 
-INSERT INTO employee (first_name, last_name)
-VALUES ("Alan","Velazquez");
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Alan","Velazquez", 1, null), ("Diego","Acosta", 2, 1), ("Víctor","Salgado", 3, null),
+("David","Morales", 4, 3), ("Diana", "España", 5, null), ("Francisco","Sanchez", 6, 5),
+("Eréndira","Acuña", 7, null), ("Axel","Tovar", 8, 7); 
 
 SELECT *
 FROM employee;
@@ -47,6 +55,9 @@ FROM employee
 RIGHT JOIN roles ON employee.role_id = roles.role_id
 RIGHT JOIN departments ON roles.department_id = departments.id;
 
+SELECT first_name, last_name, title FROM employee RIGHT JOIN roles ON employee.role_id = roles.role_id;
+
+SELECT first_name, last_name, title FROM employee RIGHT JOIN employee ON employee.role_id = roles.role_id;
 
 select *
 from departments;
@@ -56,3 +67,4 @@ from roles;
 
 select *
 from employee;
+
