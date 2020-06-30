@@ -1,6 +1,5 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
-let roleArray = [];
 
 const connection = mysql.createConnection({
     host:"localhost",
@@ -176,4 +175,52 @@ const addEmployees = () => {
     })
     
     //connection.query("")
+}
+
+const updateEmployeeRole = () => {
+    connection.query("SELECT employee_id, first_name, last_name, title FROM employee RIGHT JOIN roles ON employee.role_id = roles.role_id",(err,res) => {
+        if (err) throw err;
+        console.log(res);
+        let employeesArray = res.map(name => name.first_name + " " + name.last_name);
+        let roles = res.map(role => role.title);
+        console.log(employeesArray);
+        inquirer.prompt([
+            {
+                name:"employee",
+                type:"checkbox",
+                choices:function() {
+                    let employeesArray = res.map(name => name.first_name + " " + name.last_name);
+                    return employeesArray
+                },
+                message:"Which employee's role do you want to update?"
+            },
+            {
+                name:"role",
+                type:"checkbox",
+                choices:function(){
+                    let roles = res.map(role => role.title);
+                    return roles
+                },
+                message:"Which role do you want to assign the select employee?"
+            }
+        ]).then((answer)=>{
+            console.log(answer);
+            let arrayName = answer.employee[0].split(" ");
+            let chosenEmployee = arrayName[0];
+            let chosenRole = answer.role[0];
+            connection.query("UPDATE employee SET ? WHERE ?",
+            [
+                {
+                    title:chosenRole
+                },
+                {
+                    first_name:chosenEmployee
+                }
+            ],
+            (err,res)=> {
+                if (err) throw err;
+                console.log(res.affectedRows + " employees updated!")
+            })
+        })
+    })
 }
