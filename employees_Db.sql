@@ -47,8 +47,6 @@ VALUES ("Alan","Velazquez", 1, null), ("Diego","Acosta", 2, 1), ("Víctor","Salg
 ("David","Morales", 4, 3), ("Diana", "España", 5, null), ("Francisco","Sanchez", 6, 5),
 ("Eréndira","Acuña", 7, null), ("Axel","Tovar", 8, 7); 
 
-SELECT *
-FROM employee;
 
 SELECT employee_id, first_name, last_name, title, department, salary, manager_id
 FROM employee
@@ -61,7 +59,7 @@ RIGHT JOIN roles ON employee.role_id = roles.role_id
 RIGHT JOIN departments ON roles.department_id = departments.id)
 SELECT  employee_2.manager_id, CONCAT(Manager_2.first_name, " ", Manager_2.last_name) AS Manager, employee_2.title, employee_2.salary, employee_2.first_name, employee_2.last_name 
 FROM data AS employee_2
-INNER JOIN data AS Manager_2
+LEFT OUTER JOIN data AS Manager_2
 ON employee_2.manager_id =  Manager_2.employee_id;
 
 SELECT employee_id, first_name, last_name, title, department, salary, manager_id
@@ -78,30 +76,12 @@ SELECT salary
 FROM roles
 WHERE title = "Design Enginner";
 
-INSERT INTO roles (department_id, title, salary)
-VALUES (1,"Software Enginner", 30000);
-
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Ivan","Velazquez", 9, 1);
-
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Aimée","Meza", 10, 3);
-
-SELECT first_name, last_name, title FROM employee RIGHT JOIN roles ON employee.role_id = roles.role_id;
-
 SELECT CONCAT(manager.first_name, " ",manager.last_name) AS Manager,
 employee_1.last_name, 
 employee_1.first_name 
 FROM employee AS employee_1 
 INNER JOIN employee AS manager
 ON employee_1.manager_id = manager.employee_id;
-
-
-
-
-
-SELECT *
-FROM employee;
 
 select *
 from departments;

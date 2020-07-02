@@ -73,8 +73,7 @@ const viewAllEmployees = () => {
         console.table(res);
         tableLenght = res.length;
         let roles = res.map(roles => roles.title);
-        allRoles = roles.filter((role,index)=> roles.indexOf(role) === index)
-        console.log(allRoles);
+        allRoles = roles.filter((role,index)=> roles.indexOf(role) === index);
         selectOption();
     })
 }
@@ -106,10 +105,10 @@ const viewAllEmployeesByDept = () => {
             ],(err,res)=>{
                 if (err) throw err;
                 console.table(res);
+                selectOption();
             })
         })
     })
-    selectOption();
 }
 
 const viewAllEmployeesByMan = () => {
@@ -147,18 +146,16 @@ const viewAllEmployeesByMan = () => {
                     }
                 ],(err,res)=> {
                     console.table(res);
+                    selectOption();
                 })
             })
         })
     })
-    selectOption();
 }
 
 const addEmployees = (allRoles,tableLenght) => {
     connection.query("WITH data AS (SELECT employee_id, first_name, last_name, title, department, salary, manager_id FROM employee RIGHT JOIN roles ON employee.role_id = roles.role_id RIGHT JOIN departments ON roles.department_id = departments.id) SELECT employee_2.manager_id, CONCAT(Manager_2.first_name, ' ', Manager_2.last_name) AS Manager, employee_2.title, employee_2.salary, employee_2.first_name  ,employee_2.last_name  FROM data AS employee_2 INNER JOIN data AS Manager_2 ON employee_2.manager_id = Manager_2.employee_id",(err,res) => {
         if (err) throw err;
-        console.table(res);
-        console.log(allRoles);
         //let rolesArray = res.map(roles => roles.title);
         //console.log(rolesArray);
         inquirer.prompt([
@@ -192,15 +189,12 @@ const addEmployees = (allRoles,tableLenght) => {
                 message:"Who is the employee's manager?"
             }
         ]).then((answer) => {
-            console.log(answer);
             let newFirstName = answer.firstName;
             let newLastName = answer.lastName;
             let newRole = answer.role[0];
             let getFirstName = answer.manager[0].split(" ")
             let firstName = getFirstName[0];
             let role = answer.role[0];
-            console.log(getFirstName);
-            console.log(role);
             connection.query("SELECT employee_id, department_id, first_name, last_name, title, department, salary FROM employee RIGHT JOIN roles ON employee.role_id = roles.role_id RIGHT JOIN departments ON roles.department_id = departments.id WHERE ? or ?",
             [
                 {
@@ -222,7 +216,6 @@ const addEmployees = (allRoles,tableLenght) => {
                     salary:salary
                 },
                 (err,res)=> {
-                    console.log(res);
                     connection.query("INSERT INTO employee SET ?",
                     {
                         first_name:newFirstName,
@@ -231,15 +224,14 @@ const addEmployees = (allRoles,tableLenght) => {
                         manager_id:managerID
                     },
                     (err,res)=>{
-                        console.log(res);
+                        console.log("Employee Added!");
+                        selectOption();
                     })
                 })
             })
             
         })
     })
-    
-    //connection.query("")
 }
 
 const updateEmployeeRole = () => {
@@ -247,8 +239,8 @@ const updateEmployeeRole = () => {
         if (err) throw err;
         console.log(res);
         let employeesArray = res.map(name => name.first_name + " " + name.last_name);
-        let roles = res.map(role => role.title);
-        console.log(employeesArray);
+        //let roles = res.map(role => role.title);
+        //console.log(employeesArray);
         inquirer.prompt([
             {
                 name:"employee",
@@ -273,18 +265,41 @@ const updateEmployeeRole = () => {
             let arrayName = answer.employee[0].split(" ");
             let chosenEmployee = arrayName[0];
             let chosenRole = answer.role[0];
-            connection.query("UPDATE employee SET ? WHERE ?",
+            connection.query("SELECT role_id FROM employee WHERE ?",
             [
                 {
-                    title:chosenRole
-                },
-                {
-                    first_name:chosenEmployee
+                    first_name: chosenEmployee
                 }
-            ],
-            (err,res)=> {
+            ],(err,res)=>{
                 if (err) throw err;
-                console.log(res.affectedRows + " employees updated!")
+                console.log(res);
+                let roleID = res[0].role_id;
+                connection.query("SELECT department_id, salary FROM roles WHERE ?",
+                [
+                    {
+                        title: chosenRole
+                    }
+                ],(err,res)=> {
+                    if (err) throw err;
+                    console.log(res);
+                    let departmentID = res[0].department_id;
+                    let salary = res[0].salary;
+                    connection.query("UPDATE roles SET ? WHERE ?",
+                    [
+                        {
+                            department_id: departmentID,
+                            salary: salary,
+                            title: chosenRole
+                        },
+                        {
+                            role_id: roleID
+                        }
+                    ],(err,res)=>{
+                        if (err) throw err;
+                        console.log(res);
+                        selectOption();
+                    })
+                })
             })
         })
     })
