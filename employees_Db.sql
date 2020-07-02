@@ -2,7 +2,7 @@ DROP DATABASE IF EXISTS employees_Db;
 -- Create a database called programming_db --
 CREATE DATABASE employees_Db;
 
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Arigatorei7-';
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '';
 
 -- Use programming db for the following statements --
 use employees_Db;
@@ -48,7 +48,7 @@ VALUES ("Alan","Velazquez", 1, null), ("Diego","Acosta", 2, 1), ("Víctor","Salg
 ("Eréndira","Acuña", 7, null), ("Axel","Tovar", 8, 7); 
 
 
-SELECT employee_id, first_name, last_name, title, department, salary, manager_id
+SELECT employee_id, first_name, last_name, title, department, salary, manager_id, roles.role_id, employee.role_id
 FROM employee
 RIGHT JOIN roles ON employee.role_id = roles.role_id
 RIGHT JOIN departments ON roles.department_id = departments.id;
